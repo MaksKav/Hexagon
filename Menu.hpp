@@ -2,7 +2,6 @@
 #define MENU_H
 
 #include <SFML/Graphics.hpp>
-#include <vector>
 #include "Button.hpp"
 
 class Menu {
@@ -14,16 +13,19 @@ private:
     sf::Text titleText;
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
-    std::vector<Button> buttons;
+    Button startGameButton;
+    Button pvpButton;
+    Button pvcButton;
     void loadResources();
-    void initMenuButtons(sf::RenderWindow& window);
+
 public:
     Menu(sf::RenderWindow& window);
-    void addButton(const Button& button);
-    void handleEvent(const sf::Event& event);
+    void handleEvent(sf::RenderWindow& window ,const sf::Event& event);
     void draw(sf::RenderWindow& window);
+
+    Button* getStartGameButtonPointer();
+    Button* getPvpButtonPointer();
+    Button* getPvcButtonPointer();
 };
 
 #endif
-
-

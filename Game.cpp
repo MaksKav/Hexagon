@@ -17,6 +17,7 @@ void Game::loadResources() {
 
 void Game::run() {
     while (window.isOpen()) {
+        window.clear();
 
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -25,13 +26,11 @@ void Game::run() {
             }
 
             if (state == GameState::Menu) {
-                menu.handleEvent(event);
+                menu.handleEvent(window , event);
             }
         }
 
-        window.clear();
         window.draw(backgroundSprite);
-       // menu.draw(window);
         if (state == GameState::Menu) {
             menu.draw(window);
         } else if (state == GameState::Playing) {
