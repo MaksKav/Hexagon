@@ -2,6 +2,7 @@
 #define HEXAGONBOARD_HPP
 
 #include <vector>
+#include <map>
 #include "Hexagon.hpp"
 
 class HexagonBoard {

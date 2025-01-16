@@ -45,16 +45,33 @@ Hexagon::Hexagon(sf::RenderWindow &window, int row, int col) {
 }
 
 
-std::vector<std::pair<int, int>> Hexagon::installNeighbors(int row, int col, const std::vector<std::pair<int, int>>& vec) {
+// std::vector<std::pair<int, int>> Hexagon::installNeighbors(int row, int col, const std::vector<std::pair<int, int>>& vec) {
+//     std::vector<std::pair<int, int>> v;
+//     for (const std::pair<int, int>& p: vec) {  // Исправлено: используем const для избежания копирования
+//         auto newRow = row + p.first;
+//         auto newCol = col + p.second;
+//         if (newRow >= 0 && newCol >= 0 &&
+//              ((row <= 5 && (newCol - newRow <= 4)) ||
+//              (row >= 5 && (newCol - newRow >= -4 && newCol - newRow <= 2))
+//              )) {
+//             std::pair<int, int> newPair = {newRow, newCol};
+//             v.push_back(newPair);
+//                                                }
+//     }
+//     return v;
+// }
+
+std::vector<std::pair<int, int>> Hexagon::installNeighbors(int row, int col,const std::vector<std::pair<int, int>>& vec) {
     std::vector<std::pair<int, int>> v;
-    for (const std::pair<int, int>& p: vec) {  // Исправлено: используем const для избежания копирования
-        auto newRow = row + p.first;
-        auto newCol = col + p.second;
-        if (newRow >= 0 && newCol >= 0 && ((row <= 5 && newCol - newRow <= 4) || (
-                                               row >= 5 && newCol - newRow >= -4 && newCol - newRow <= 2))) {
-            std::pair<int, int> newPair = {newRow, newCol};
-            v.push_back(newPair);
-                                               }
+    for (const auto &p : vec) {
+        int newRow = row + p.first;
+        int newCol = col + p.second;
+        if (newRow >= 0 && newCol >= 0 && (
+                (row <= 5 && (newCol - newRow <= 4)) ||
+                (row >= 5 && (newCol - newRow >= -4 && newCol - newRow <= 2))
+            )) {
+            v.push_back({newRow, newCol});
+            }
     }
     return v;
 }

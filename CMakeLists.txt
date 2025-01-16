@@ -29,4 +29,4 @@ add_executable(Hexxagon
         Menu.cpp
         Hexagon.cpp
         HexagonBoard.cpp)
-target_link_libraries(Hexxagon sfml-graphics)
+target_link_libraries(Hexxagon sfml-graphics sfml-window sfml-system)
