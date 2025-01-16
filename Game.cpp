@@ -1,9 +1,11 @@
 #include "Game.hpp"
+Game::GameState Game::state = Game::GameState::Menu;
 
 Game::Game()
     : window(sf::VideoMode(1800, 1400), "Hexxagon"),
       menu(window),
-      state(GameState::Menu) {
+      board(window)
+       {
     loadResources();
 }
 
@@ -33,7 +35,7 @@ void Game::run() {
         if (state == GameState::Menu) {
             menu.draw(window);
         } else if (state == GameState::Playing) {
-
+            board.draw(window);
         }
         window.display();
     }
@@ -44,6 +46,10 @@ void Game::loadResources() {
         throw std::runtime_error("Can't load the background texture");
     }
     backgroundSprite.setTexture(backgroundTexture);
+}
+
+void Game::setState(GameState newState) {
+    state = newState;
 }
 
 
