@@ -81,6 +81,22 @@ build CMakeFiles/Hexxagon.dir/Menu.cpp.obj: CXX_COMPILER__Hexxagon_unscanned_Deb
   OBJECT_DIR = CMakeFiles\Hexxagon.dir
   OBJECT_FILE_DIR = CMakeFiles\Hexxagon.dir
 
+build CMakeFiles/Hexxagon.dir/Hexagon.cpp.obj: CXX_COMPILER__Hexxagon_unscanned_Debug C$:/Users/Maks/CLionProjects/Hexxagon/Hexagon.cpp || cmake_object_order_depends_target_Hexxagon
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\Hexxagon.dir\Hexagon.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Maks/CLionProjects/Hexxagon/cmake-build-debug/_deps/sfml-src/include
+  OBJECT_DIR = CMakeFiles\Hexxagon.dir
+  OBJECT_FILE_DIR = CMakeFiles\Hexxagon.dir
+
+build CMakeFiles/Hexxagon.dir/HexagonBoard.cpp.obj: CXX_COMPILER__Hexxagon_unscanned_Debug C$:/Users/Maks/CLionProjects/Hexxagon/HexagonBoard.cpp || cmake_object_order_depends_target_Hexxagon
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\Hexxagon.dir\HexagonBoard.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Maks/CLionProjects/Hexxagon/cmake-build-debug/_deps/sfml-src/include
+  OBJECT_DIR = CMakeFiles\Hexxagon.dir
+  OBJECT_FILE_DIR = CMakeFiles\Hexxagon.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Hexxagon
@@ -89,7 +105,7 @@ build CMakeFiles/Hexxagon.dir/Menu.cpp.obj: CXX_COMPILER__Hexxagon_unscanned_Deb
 #############################################
 # Link the executable Hexxagon.exe
 
-build Hexxagon.exe: CXX_EXECUTABLE_LINKER__Hexxagon_Debug CMakeFiles/Hexxagon.dir/Main.cpp.obj CMakeFiles/Hexxagon.dir/Button.cpp.obj CMakeFiles/Hexxagon.dir/Game.cpp.obj CMakeFiles/Hexxagon.dir/Menu.cpp.obj | _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/sfml-build/lib/libsfml-window-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-src/extlibs/libs-mingw/x64/libfreetype.a || _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-build/lib/libsfml-window-s-d.a
+build Hexxagon.exe: CXX_EXECUTABLE_LINKER__Hexxagon_Debug CMakeFiles/Hexxagon.dir/Main.cpp.obj CMakeFiles/Hexxagon.dir/Button.cpp.obj CMakeFiles/Hexxagon.dir/Game.cpp.obj CMakeFiles/Hexxagon.dir/Menu.cpp.obj CMakeFiles/Hexxagon.dir/Hexagon.cpp.obj CMakeFiles/Hexxagon.dir/HexagonBoard.cpp.obj | _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/sfml-build/lib/libsfml-window-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-src/extlibs/libs-mingw/x64/libfreetype.a || _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-build/lib/libsfml-window-s-d.a
   FLAGS = -g
   LINK_LIBRARIES = _deps/sfml-build/lib/libsfml-graphics-s-d.a  _deps/sfml-build/lib/libsfml-window-s-d.a  _deps/sfml-build/lib/libsfml-system-s-d.a  -lopengl32  -lwinmm  -lgdi32  _deps/sfml-src/extlibs/libs-mingw/x64/libfreetype.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Hexxagon.dir

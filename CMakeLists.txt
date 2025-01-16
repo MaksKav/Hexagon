@@ -26,5 +26,7 @@ add_executable(Hexxagon
         Main.cpp
         Button.cpp
         Game.cpp
-        Menu.cpp)
+        Menu.cpp
+        Hexagon.cpp
+        HexagonBoard.cpp)
 target_link_libraries(Hexxagon sfml-graphics)
