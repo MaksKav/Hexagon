@@ -35,6 +35,12 @@ void Game::run() {
         if (state == GameState::Menu) {
             menu.draw(window);
         } else if (state == GameState::Playing) {
+            board.initPvpStartPosition(1 , 2);
+            if (event.type == sf::Event::MouseButtonPressed &&
+               event.mouseButton.button == sf::Mouse::Left) {
+                sf::Vector2f clickPosition(event.mouseButton.x, event.mouseButton.y);
+                board.handleClick(clickPosition); // Передаем позицию клика в HexagonBoard
+               }
             board.draw(window);
         }
         window.display();

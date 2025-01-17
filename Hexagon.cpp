@@ -1,10 +1,14 @@
 #include "Hexagon.hpp"
 
 #include <cmath>
+#include <iostream>
 
 const float Hexagon::hexRadius = 70;
 
 Hexagon::Hexagon(sf::RenderWindow &window, int row, int col) {
+    this->row = row;
+    this->col = col;
+
     outerHexxagon = sf::CircleShape(hexRadius, 6);
     outerHexxagon.setOutlineThickness(10);
     outerHexxagon.setOutlineColor(sf::Color(0, 0, 0));
@@ -15,63 +19,30 @@ Hexagon::Hexagon(sf::RenderWindow &window, int row, int col) {
     innerHexxagon.setOutlineColor(sf::Color(128, 0, 128));
     innerHexxagon.setFillColor(sf::Color::Transparent);
 
-    // install neighbors for every hexxagon
-    // we have 2 types of neighbors
-    std::vector<std::pair<int, int> > beforeRowSixFirst = {
-        {0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {1, 0}, {1, 1}
-    };
-    std::vector<std::pair<int, int> > afterFiveRowFirst = {
-        {0, -1}, {0, 1}, {-1, 0}, {-1, 1}, {1, -1}, {1, 0}
-    };
-    firstNeighborsPos = row <= 5
-                            ? installNeighbors(row, col, beforeRowSixFirst)
-                            : installNeighbors(row, col, afterFiveRowFirst);
+    if (!player2Texture.loadFromFile("C:\\Users\\Maks\\CLionProjects\\Hexxagon\\resources\\Aleh.png")) {
+        std::cout << "Failed to load Aleh texture";
+    }
 
+    if (!player1Texture.loadFromFile("C:\\Users\\Maks\\CLionProjects\\Hexxagon\\resources\\MaksToHex.png")) {
+        std::cout << "Failed to load Maks texture";
+    }
 
-    std::vector<std::pair<int, int> > beforeRowSixSecond = {
-        {2, 0}, {2, 1}, {2, 2}, {1, 2}, {0, 2},
-        {-1, 1}, {-2, 0}, {-2, -1}, {-2, -2}, {-1, -2}, {0, -2}, {1, -1}
-    };
-    std::vector<std::pair<int, int> > afterFiveRowSecond = {
-        {-2, 0}, {-1, -1}, {0, -2}, {1, -2}, {2, -2}, {2, -1},
-        {2, 0}, {1, 1}, {0, 2}, {-1, 2}, {-2, 2}, {-2, 1}
-    };
-    secondNeighborsPos = row <= 5
-                             ? installNeighbors(row, col, beforeRowSixSecond)
-                             : installNeighbors(row, col, afterFiveRowSecond);
+    getNeighbors(row, col);
 
-
-    setOuterAndInnerHexxagonPositions(window , row, col);
+    setOuterAndInnerHexxagonPositions(window, row, col);
 }
 
 
-// std::vector<std::pair<int, int>> Hexagon::installNeighbors(int row, int col, const std::vector<std::pair<int, int>>& vec) {
-//     std::vector<std::pair<int, int>> v;
-//     for (const std::pair<int, int>& p: vec) {  // Исправлено: используем const для избежания копирования
-//         auto newRow = row + p.first;
-//         auto newCol = col + p.second;
-//         if (newRow >= 0 && newCol >= 0 &&
-//              ((row <= 5 && (newCol - newRow <= 4)) ||
-//              (row >= 5 && (newCol - newRow >= -4 && newCol - newRow <= 2))
-//              )) {
-//             std::pair<int, int> newPair = {newRow, newCol};
-//             v.push_back(newPair);
-//                                                }
-//     }
-//     return v;
-// }
-
-std::vector<std::pair<int, int>> Hexagon::installNeighbors(int row, int col,const std::vector<std::pair<int, int>>& vec) {
-    std::vector<std::pair<int, int>> v;
-    for (const auto &p : vec) {
+std::vector<std::pair<int, int> > Hexagon::installNeighbors(int row, int col,
+                                                            const std::vector<std::pair<int, int> > &vec) {
+    std::vector<std::pair<int, int> > v;
+    for (const auto &p: vec) {
         int newRow = row + p.first;
         int newCol = col + p.second;
-        if (newRow >= 0 && newCol >= 0 && (
-                (row <= 5 && (newCol - newRow <= 4)) ||
-                (row >= 5 && (newCol - newRow >= -4 && newCol - newRow <= 2))
-            )) {
+
+        if (newRow >= 0 && newCol >= 0) {     // to nie usunie wszystkie niepoprawne pary , ale my i tak nie musimy ich usuwac
             v.push_back({newRow, newCol});
-            }
+        }
     }
     return v;
 }
@@ -104,17 +75,99 @@ void Hexagon::setOuterAndInnerHexxagonPositions(sf::RenderWindow &window, int ro
 }
 
 
-void Hexagon::setOwner(int player, const sf::Texture &playerTexture) {
+void Hexagon::setOwner(int player) {
     isOccupied = true;
     owner = player;
-    texture = playerTexture;
-    innerHexxagon.setFillColor(sf::Color::White);
-    innerHexxagon.setTexture(&texture);
+    if (player == 2) {
+        innerHexxagon.setTexture(&player2Texture);
+    }
+    if (player == 1) {
+        innerHexxagon.setTexture(&player1Texture);
+    }
 }
 
 void Hexagon::draw(sf::RenderWindow &window) {
     window.draw(outerHexxagon);
     window.draw(innerHexxagon);
+}
+
+bool Hexagon::contains(sf::Vector2f point) const {
+    return outerHexxagon.getGlobalBounds().contains(point);
+}
+
+void Hexagon::getNeighbors(int row, int col) {
+    // install neighbors for every hexxagon
+    // we have 2 types of neighbors
+    std::vector<std::pair<int, int> > beforeRowThreeFirst = {
+        {0, -1}, {0, 1}, {-1, -1}, {-1, 0}, {1, 0}, {1, 1}
+    };
+
+    std::vector<std::pair<int, int> > beforeRowThreeSecond = {
+        {-2, -2}, {-2, -1}, {-2, 0}, {-1, 1}, {0, 2}, {1, 2}, {2, 2},
+        {2, 1}, {2, 0}, {1, -1}, {-1, -2}, {0, -2}
+    };
+
+    std::vector<std::pair<int, int> > rowThreeFirst = {
+        {-1, -1}, {-1, 0}, {0, 1}, {1, 1}, {1, 0}, {0, -1}
+    };
+
+    std::vector<std::pair<int, int> > rowThreeSecond = {
+        {0, 2}, {-1, 1}, {-2, 0}, {-2, -1}, {-2, -2}, {-1, -2}, {0, -2},
+        {1, -1}, {2, -1}, {2, 0}, {2, 1}, {1, 2}
+    };
+
+
+    std::vector<std::pair<int, int> > rowFourFirst = {
+        {-1, -1}, {-1, 0}, {0, 1}, {1, 0}, {1, -1}, {0, -1}
+    };
+
+    std::vector<std::pair<int, int> > rowFourSecond = {
+        {0, -2}, {-1, -2}, {-2, -2}, {-2, -1}, {-2, 0}, {-1, 1}, {0, 2},
+        {1, 1}, {2, 0}, {2, -1}, {2, -2}, {1, -2}
+    };
+
+    std::vector<std::pair<int, int> > rowFiveFirst = {
+        {-1, 0}, {-1, 1}, {0, 1}, {0, -1}, {1, -1}, {1, 0}
+    };
+
+    std::vector<std::pair<int, int> > rowFiveSecond = {
+        {-2, 0}, {-2, 1}, {-1, 2}, {0, 2}, {1, 1}, {2, 0}, {2, -1},
+        {2, -2}, {1, -2}, {0, -2}, {-1, -1}, {-2, -1}
+    };
+
+    std::vector<std::pair<int, int> > afterFiveRowFirst = {
+        {-1, 0}, {-1, 1}, {0, 1}, {0, -1}, {1, -1}, {1, 0}
+    };
+
+    std::vector<std::pair<int, int> > afterFiveRowSecond = {
+        {-2, 0}, {-2, 1}, {-2, 2}, {-1, 2}, {0, 2}, {1, 1},
+        {2, 0}, {2, -1}, {2, -2}, {1, -2}, {0, -2}, {-1, -1}
+    };
+
+    switch (row) {
+        case 0:
+        case 1:
+        case 2:
+            firstNeighborsPos = installNeighbors(row, col, beforeRowThreeFirst);
+            secondNeighborsPos = installNeighbors(row, col, beforeRowThreeSecond);
+            break;
+        case 3:
+            firstNeighborsPos = installNeighbors(row, col, rowThreeFirst);
+            secondNeighborsPos = installNeighbors(row, col, rowThreeSecond);
+            break;
+        case 4:
+            firstNeighborsPos = installNeighbors(row, col, rowFourFirst);
+            secondNeighborsPos = installNeighbors(row, col, rowFourSecond);
+            break;
+        case 5:
+            firstNeighborsPos = installNeighbors(row, col, rowFiveFirst);
+            secondNeighborsPos = installNeighbors(row, col, rowFiveSecond);
+            break;
+        default:
+            firstNeighborsPos = installNeighbors(row, col, afterFiveRowFirst);
+            secondNeighborsPos = installNeighbors(row, col, afterFiveRowSecond);
+            break;
+    }
 }
 
 void Hexagon::installUnavailableHexagon(sf::RenderWindow &window) {
@@ -124,11 +177,6 @@ void Hexagon::installUnavailableHexagon(sf::RenderWindow &window) {
     outerHexxagon.setFillColor(sf::Color::Transparent);
     innerHexxagon.setOutlineColor(sf::Color::Transparent);
     innerHexxagon.setFillColor(sf::Color::Transparent);
-}
-
-
-bool Hexagon::contains(sf::Vector2f point) const {
-    return outerHexxagon.getGlobalBounds().contains(point);
 }
 
 int Hexagon::getOwner() const {
@@ -142,3 +190,13 @@ std::vector<std::pair<int, int> > Hexagon::getFirstNeighborsPos() const {
 std::vector<std::pair<int, int> > Hexagon::getSecondNeighborsPos() const {
     return secondNeighborsPos;
 }
+
+void Hexagon::setOutlineColor(sf::Color color) {
+    innerHexxagon.setOutlineColor(color);
+}
+
+bool Hexagon::getIsAvailable() const {
+    return isAvailable;
+}
+
+
