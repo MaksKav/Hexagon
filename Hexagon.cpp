@@ -28,7 +28,6 @@ Hexagon::Hexagon(sf::RenderWindow &window, int row, int col) {
     }
 
     getNeighbors(row, col);
-
     setOuterAndInnerHexxagonPositions(window, row, col);
 }
 
@@ -40,7 +39,7 @@ std::vector<std::pair<int, int> > Hexagon::installNeighbors(int row, int col,
         int newRow = row + p.first;
         int newCol = col + p.second;
 
-        if (newRow >= 0 && newCol >= 0) {     // to nie usunie wszystkie niepoprawne pary , ale my i tak nie musimy ich usuwac
+        if (newRow >= 0 && newCol >= 0) {      // to nie usunie wszystkie niepoprawne pary , ale my i tak nie musimy ich usuwac
             v.push_back({newRow, newCol});
         }
     }
@@ -74,15 +73,15 @@ void Hexagon::setOuterAndInnerHexxagonPositions(sf::RenderWindow &window, int ro
     innerHexxagon.setPosition(xPos, yPos);
 }
 
-
 void Hexagon::setOwner(int player) {
     isOccupied = true;
     owner = player;
-    if (player == 2) {
-        innerHexxagon.setTexture(&player2Texture);
-    }
-    if (player == 1) {
-        innerHexxagon.setTexture(&player1Texture);
+    innerHexxagon.setFillColor(sf::Color::White); //really działa tekstura tylko jezeli przed tym zrobić bialy --_-- ja z tym 3h. męczyłem się...
+    switch (player) {
+        case 1: innerHexxagon.setTexture(&player1Texture);
+        break;
+        case 2: innerHexxagon.setTexture(&player2Texture);
+        break;
     }
 }
 
@@ -172,7 +171,6 @@ void Hexagon::getNeighbors(int row, int col) {
 
 void Hexagon::installUnavailableHexagon(sf::RenderWindow &window) {
     isAvailable = false;
-    isOccupied = true;
     outerHexxagon.setOutlineColor(sf::Color::Transparent);
     outerHexxagon.setFillColor(sf::Color::Transparent);
     innerHexxagon.setOutlineColor(sf::Color::Transparent);
@@ -199,4 +197,7 @@ bool Hexagon::getIsAvailable() const {
     return isAvailable;
 }
 
+bool Hexagon::getIsOccupied() const {
+    return isOccupied;
+}
 

@@ -30,7 +30,7 @@ void HexagonBoard::handleClick(sf::Vector2f clickPosition) {
     sf::Color activeOutlineColorSecondCircle = sf::Color(255, 225, 0); // orange
 
     for (auto &[position, hexagon]: hexagons) {
-        if (hexagon.contains(clickPosition) && hexagon.getIsAvailable()) {
+        if (hexagon.contains(clickPosition) && hexagon.getIsOccupied()) {
             if (selectedHexagon != std::make_pair(-1, -1) && hexagons.contains(selectedHexagon)) {
                 hexagons[selectedHexagon].setOutlineColor(unactiveOutlineColor);
                 auto neighborsFirst = hexagons[selectedHexagon].getFirstNeighborsPos();
@@ -63,7 +63,6 @@ void HexagonBoard::handleClick(sf::Vector2f clickPosition) {
     }
 }
 
-
 void HexagonBoard::draw(sf::RenderWindow &window) {
     markHexagonsUnavailable(window, {{3, 4}, {4, 3}, {5, 4}});
     for (auto &hexagonPair: hexagons) {
@@ -71,8 +70,7 @@ void HexagonBoard::draw(sf::RenderWindow &window) {
     }
 }
 
-void HexagonBoard::markHexagonsUnavailable(sf::RenderWindow &window,
-                                           const std::vector<std::pair<int, int> > &positions) {
+void HexagonBoard::markHexagonsUnavailable(sf::RenderWindow &window, const std::vector<std::pair<int, int> > &positions) {
     for (const auto &pos: positions) {
         auto it = hexagons.find(pos);
         if (it != hexagons.end()) {
@@ -90,8 +88,7 @@ void HexagonBoard::initPvpStartPosition(int player1, int player2) {
             it->second.setOwner(player2);
         }
     }
-    for (const auto &pos: positionsPlayer1
-    ) {
+    for (const auto &pos: positionsPlayer1) {
         auto it = hexagons.find(pos);
         if (it != hexagons.end()) {
             it->second.setOwner(player1);

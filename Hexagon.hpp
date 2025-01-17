@@ -44,6 +44,7 @@ public:
 
     void setOutlineColor(sf::Color color);
     bool getIsAvailable() const;
+    bool getIsOccupied() const;
 };
 
 #endif // HEXXAGON_HPP
