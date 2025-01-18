@@ -12,18 +12,20 @@ private:
     sf::Sprite backgroundSprite;
     sf::Texture backgroundTexture;
     Menu menu;
-    HexagonBoard board;
+    HexagonBoard boardPvP;
+    //HexagonBoard boardPvC;
 
 
 public:
     Game();
-    enum class GameState { Menu, Playing };
+    enum class GameState { Menu , Playing };
+    enum class GameMode {None , PvP , PvC} ;
     static GameState state;
+    static GameMode mode;
 
     void run(); // Главный игровой цикл
     void loadResources();
 
-    static void setState(GameState newState);
 };
 
 #endif // GAME_H

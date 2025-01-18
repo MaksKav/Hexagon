@@ -23,9 +23,6 @@ public:
     void handleEvent(sf::RenderWindow& window ,const sf::Event& event);
     void draw(sf::RenderWindow& window);
 
-    Button* getStartGameButtonPointer();
-    Button* getPvpButtonPointer();
-    Button* getPvcButtonPointer();
 };
 
 #endif

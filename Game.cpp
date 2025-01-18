@@ -1,14 +1,13 @@
 #include "Game.hpp"
 Game::GameState Game::state = Game::GameState::Menu;
+Game::GameMode Game::mode = Game::GameMode::None;
 
 Game::Game()
     : window(sf::VideoMode(1800, 1400), "Hexxagon"),
       menu(window),
-      board(window) {
-
+      boardPvP(window) {
     loadResources();
-    board.initPvpStartPosition(1, 2);
-
+    boardPvP.initPvpStartPosition(1, 2);
 }
 
 void Game::run() {
@@ -36,13 +35,13 @@ void Game::run() {
         window.draw(backgroundSprite);
         if (state == GameState::Menu) {
             menu.draw(window);
-        } else if (state == GameState::Playing) {
+        } else if (state == GameState::Playing && mode == GameMode::PvP) {
             if (event.type == sf::Event::MouseButtonPressed &&
                 event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2f clickPosition(event.mouseButton.x, event.mouseButton.y);
-                board.handleClick(clickPosition); // Передаем позицию клика в HexagonBoard
+                boardPvP.handleClick(clickPosition); // Передаем позицию клика в HexagonBoard
             }
-            board.draw(window);
+            boardPvP.draw(window);
         }
         window.display();
     }
@@ -53,8 +52,4 @@ void Game::loadResources() {
         throw std::runtime_error("Can't load the background texture");
     }
     backgroundSprite.setTexture(backgroundTexture);
-}
-
-void Game::setState(GameState newState) {
-    state = newState;
 }

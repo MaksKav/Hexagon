@@ -37,12 +37,13 @@ void Menu::handleEvent(sf::RenderWindow &window, const sf::Event &event) {
         sf::Vector2f mousePos(event.mouseButton.x, event.mouseButton.y);
 
         if (startGameButton.isClicked(window, sf::Mouse::Left)) {
-            Game::setState(Game::GameState::Playing);
+            Game::state = Game::GameState::Playing;
         }
 
         if (pvpButton.isClicked(window, sf::Mouse::Left)) {
             pvpButton.useActiveColor();
             pvpButton.setClickedFlag(true);
+            Game::mode = Game::GameMode::PvP;
 
             pvcButton.useInactiveColor();
             pvcButton.setClickedFlag(false);
@@ -51,6 +52,7 @@ void Menu::handleEvent(sf::RenderWindow &window, const sf::Event &event) {
         if (pvcButton.isClicked(window, sf::Mouse::Left)) {
             pvcButton.useActiveColor();
             pvcButton.setClickedFlag(true);
+            Game::mode = Game::GameMode::PvC;
 
             pvpButton.useInactiveColor();
             pvpButton.setClickedFlag(false);
@@ -101,17 +103,4 @@ void Menu::draw(sf::RenderWindow &window) {
     startGameButton.draw(window);
     pvpButton.draw(window);
     pvcButton.draw(window);
-}
-
-
-Button *Menu::getStartGameButtonPointer() {
-    return &startGameButton;
-}
-
-Button *Menu::getPvpButtonPointer() {
-    return &pvpButton;
-}
-
-Button *Menu::getPvcButtonPointer() {
-    return &pvcButton;
 }

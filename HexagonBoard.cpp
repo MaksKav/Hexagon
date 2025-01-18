@@ -85,26 +85,6 @@ void HexagonBoard::processMove(sf::Vector2f clickPosition) {
     }
 }
 
-/*void HexagonBoard::processMove(sf::Vector2f clickPosition) {
-    for (auto &[position, hexagon]: hexagons) {
-        if (hexagon.contains(clickPosition) && hexagon.getOwner() == 0 && selectedHexagonPos != std::make_pair(-1, -1)) {
-            // Получаем текущую выбранную клетку
-            Hexagon& selectedHex = hexagons[selectedHexagonPos];
-            Hexagon& targetHex = hexagons[position];
-
-            // Проверяем, является ли клетка соседней
-            auto currentHexNeighborsFirst = hexagons[selectedHexagonPos].getFirstNeighborsPos();
-            auto currentHexNeighborsSecond = hexagons[selectedHexagonPos].getSecondNeighborsPos();
-
-            if (std::find(currentHexNeighborsFirst.begin(), currentHexNeighborsFirst.end(), targetHex.getPosition()) != currentHexNeighborsFirst.end()) {
-                handleMoveFirstNeighbor(targetHex);
-            }
-            else if (std::find(currentHexNeighborsSecond.begin(), currentHexNeighborsSecond.end(), targetHex.getPosition()) != currentHexNeighborsSecond.end()) {
-                handleMoveSecondNeighbor(targetHex);
-            }
-        }
-    }
-}*/
 
 // Метод для обработки перемещения на первый сосед
 void HexagonBoard::handleMoveFirstNeighbor(Hexagon& targetHex) {
