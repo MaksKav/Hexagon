@@ -13,7 +13,7 @@ private:
     sf::Color activeOutlineColor;
     bool isAvailable = true;
     bool isOccupied = false;
-    int owner = 0;
+    int owner = -100500;
     sf::Texture player1Texture;
     sf::Texture player2Texture;
     sf::Texture playerComputerTexture;

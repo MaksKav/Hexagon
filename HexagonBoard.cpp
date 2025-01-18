@@ -18,6 +18,7 @@ void HexagonBoard::initHexxagonMap(sf::RenderWindow &window) {
     for (auto row = 0; row < rows; row++) {
         for (auto col = 0; col < cols; col++) {
             Hexagon hex(window, row, col);
+            hex.setOwner(0);
             hexagons.emplace(std::make_pair(row, col), hex);
         }
         if (row < 4) {
