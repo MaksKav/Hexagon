@@ -5,7 +5,10 @@ Game::Game()
     : window(sf::VideoMode(1800, 1400), "Hexxagon"),
       menu(window),
       board(window) {
+
     loadResources();
+    board.initPvpStartPosition(1, 2);
+
 }
 
 void Game::run() {
@@ -34,7 +37,6 @@ void Game::run() {
         if (state == GameState::Menu) {
             menu.draw(window);
         } else if (state == GameState::Playing) {
-            board.initPvpStartPosition(1, 2);
             if (event.type == sf::Event::MouseButtonPressed &&
                 event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2f clickPosition(event.mouseButton.x, event.mouseButton.y);

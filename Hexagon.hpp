@@ -19,6 +19,8 @@ private:
     sf::Texture playerComputerTexture;
     std::vector<std::pair<int,int>> firstNeighborsPos;
     std::vector<std::pair<int,int>> secondNeighborsPos;
+    std::pair<int,int> position;
+
     int row;
     int col;
 
@@ -45,6 +47,8 @@ public:
     void setOutlineColor(sf::Color color);
     bool getIsAvailable() const;
     bool getIsOccupied() const;
+    std::pair<int,int> getPosition();
+
 };
 
 #endif // HEXXAGON_HPP

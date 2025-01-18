@@ -8,6 +8,7 @@ const float Hexagon::hexRadius = 70;
 Hexagon::Hexagon(sf::RenderWindow &window, int row, int col) {
     this->row = row;
     this->col = col;
+    position = {row,col};
 
     outerHexxagon = sf::CircleShape(hexRadius, 6);
     outerHexxagon.setOutlineThickness(10);
@@ -81,6 +82,8 @@ void Hexagon::setOwner(int player) {
         case 1: innerHexxagon.setTexture(&player1Texture);
         break;
         case 2: innerHexxagon.setTexture(&player2Texture);
+        break;
+        case 0: innerHexxagon.setFillColor(sf::Color::Transparent);
         break;
     }
 }
@@ -200,4 +203,10 @@ bool Hexagon::getIsAvailable() const {
 bool Hexagon::getIsOccupied() const {
     return isOccupied;
 }
+
+std::pair<int, int> Hexagon::getPosition() {
+    return position;
+}
+
+
 
