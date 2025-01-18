@@ -44,7 +44,7 @@ sf::RectangleShape &Button::getShape() {
     return shape;
 }
 
-void Button::setPosition(sf::RenderWindow &window, float x, float y, const std::string &label) {
+void Button::setPosition(sf::RenderWindow &window, float x, float y) {
     shape.setPosition(x, y);
     setTextPos(window, x, y);
 }
@@ -60,6 +60,11 @@ void Button::setTextPos(sf::RenderWindow &window, float shapeX, float shapeY) {
 void Button::setText(const std::string &t) {
     text.setString(t);
 }
+
+void Button::setTextSize(int size) {
+    text.setCharacterSize(size);
+}
+
 
 void Button::setTextColor(sf::Color color) {
     text.setFillColor(color);

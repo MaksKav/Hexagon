@@ -19,7 +19,7 @@ public:
     Button(float width, float height, const std::string &label, const sf::Font &font,
            sf::Color fillColor, sf::Color outlineColor, float outlineThickness);
 
-    void setPosition(sf::RenderWindow &window, float x, float y, const std::string &label);
+    void setPosition(sf::RenderWindow &window, float x, float y);
     virtual void draw(sf::RenderWindow &window);
 
     sf::FloatRect getGlobalBounds() const {
@@ -27,14 +27,11 @@ public:
 
     }
 
-    // Проверка, находится ли курсор мыши внутри кнопки
     bool isMouseOver(sf::RenderWindow& window) const {
-        // Получаем позицию мыши в мировых координатах
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
         return getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos));
     }
 
-    // Проверка клика по кнопке
     bool isClicked(sf::RenderWindow& window, sf::Mouse::Button button) const {
         return isMouseOver(window) && sf::Mouse::isButtonPressed(button);
     }
@@ -52,6 +49,7 @@ public:
     std::string getText() const;
     void setTextColor(sf::Color color);
     void setText(const std::string &t);
+    void setTextSize(int size);
 
 };
 

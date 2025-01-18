@@ -6,8 +6,8 @@ Game::Game()
     : window(sf::VideoMode(1800, 1400), "Hexxagon"),
       menu(window),
       boardPvP(window) {
-    loadResources();
-    boardPvP.initPvpStartPosition(1, 2);
+      loadResources();
+      boardPvP.initPvpStartPosition(1, 2);
 }
 
 void Game::run() {
@@ -53,3 +53,5 @@ void Game::loadResources() {
     }
     backgroundSprite.setTexture(backgroundTexture);
 }
+
+

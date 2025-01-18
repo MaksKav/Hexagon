@@ -13,7 +13,7 @@ private:
     sf::Texture backgroundTexture;
     Menu menu;
     HexagonBoard boardPvP;
-    //HexagonBoard boardPvC;
+    // HexagonBoard boardPvC;
 
 
 public:

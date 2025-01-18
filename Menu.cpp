@@ -12,13 +12,13 @@ Menu::Menu(sf::RenderWindow &window)
       pvcButton(700.f, 70.f, "PLAYER vs. COMPUTER", nameFont, sf::Color(255, 255, 255, 90), sf::Color::Black, 5.f) {
     loadResources();
 
-    startGameButton.setPosition(window, (window.getSize().x - 700.f) / 2, menuHeight, startGameButton.getText());
+    startGameButton.setPosition(window, (window.getSize().x - 700.f) / 2, menuHeight);
 
     auto playButtonGlobalPosition = startGameButton.getGlobalPosition();
-    pvpButton.setPosition(window, playButtonGlobalPosition.x, playButtonGlobalPosition.y - 150, pvpButton.getText());
+    pvpButton.setPosition(window, playButtonGlobalPosition.x, playButtonGlobalPosition.y - 150);
 
     auto pvpButtonGlobalPosition = pvpButton.getGlobalPosition();
-    pvcButton.setPosition(window, playButtonGlobalPosition.x, pvpButtonGlobalPosition.y - 100, pvcButton.getText());
+    pvcButton.setPosition(window, playButtonGlobalPosition.x, pvpButtonGlobalPosition.y - 100);
 }
 
 void Menu::loadResources() {

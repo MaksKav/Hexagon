@@ -9,6 +9,7 @@
 
 class HexagonBoard {
 private:
+    sf::RenderWindow& window;
     sf::Color unactiveOutlineColor = sf::Color(128, 0, 128);
     sf::Color activeOutlineColorFirstCircle = sf::Color(122, 235, 52);
     sf::Color activeOutlineColorSecondCircle = sf::Color(255, 225, 0);
@@ -39,7 +40,7 @@ private:
 
     bool checkGameOver();
     bool canPlayerMakeMove(int player);
-    void endGame(sf::RenderWindow &window);
+    void endGame(sf::RenderWindow &window ,  sf::Texture screenshotTexture);
 public:
     HexagonBoard(sf::RenderWindow &window);
 

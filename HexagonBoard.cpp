@@ -1,12 +1,12 @@
 #include "HexagonBoard.hpp"
 
-#include <iostream>
-#include "Hexagon.hpp"
 #include <valarray>
+#include "Game.hpp"
 
 
-HexagonBoard::HexagonBoard(sf::RenderWindow &window):
-    scoreButtonPvP(500, 150, "First player: \nSecond player:", font, sf::Color(0,0,0,60), sf::Color::Black, 0) {
+HexagonBoard::HexagonBoard(sf::RenderWindow &window): window(window),
+                                                      scoreButtonPvP(500, 150, "First player: \nSecond player:", font,
+                                                                     sf::Color(0, 0, 0, 60), sf::Color::Black, 0) {
     font.loadFromFile("C:\\Users\\Maks\\CLionProjects\\Hexxagon\\resources\\fonts\\Jersey15-Regular.ttf");
     initHexxagonMap(window);
 }
@@ -39,30 +39,23 @@ void HexagonBoard::draw(sf::RenderWindow &window) {
 };
 
 void HexagonBoard::handleClick(sf::Vector2f clickPosition) {
-    // Если еще не выбран гексагон, выбираем его
     if (selectedHexagonPos == std::make_pair(-1, -1)) {
         selectHexagon(clickPosition);
-    }
-    // Если выбран гексагон, то проверяем возможные ходы
-    else {
+    } else {
         processMove(clickPosition);
     }
 }
 
-// Метод для обработки выбора клетки
 void HexagonBoard::selectHexagon(sf::Vector2f clickPosition) {
     for (auto &[position, hexagon]: hexagons) {
         if (hexagon.contains(clickPosition) && hexagon.getOwner() == currentPlayerPvP) {
-            // Сбрасываем предыдущее выделение
             if (selectedHexagonPos != std::make_pair(-1, -1) && hexagons.contains(selectedHexagonPos)) {
                 resetPreviousSelection();
             }
 
-            // Устанавливаем новое выделение
             selectedHexagonPos = position;
             hexagon.setOutlineColor(activeOutlineColorSecondCircle);
 
-            // Подсвечиваем соседние клетки, на которые можно сделать ход
             highlightAvailableMoves();
         }
     }
@@ -70,16 +63,15 @@ void HexagonBoard::selectHexagon(sf::Vector2f clickPosition) {
 
 void HexagonBoard::processMove(sf::Vector2f clickPosition) {
     for (auto &[position, hexagon]: hexagons) {
-        // Если клик на гексагон текущего игрока, переизбираем его
         if (hexagon.contains(clickPosition) && hexagon.getOwner() == currentPlayerPvP) {
-            resetPreviousSelection(); // Сброс выделения
-            selectedHexagonPos = position; // Новый выбор
-            hexagon.setOutlineColor(activeOutlineColorSecondCircle); // Выделяем новый
-            highlightAvailableMoves(); // Подсвечиваем доступные ходы
-            return; // Завершаем обработку
+            resetPreviousSelection();
+            selectedHexagonPos = position;
+            hexagon.setOutlineColor(activeOutlineColorSecondCircle);
+            highlightAvailableMoves();
+            return;
         }
 
-        // Если клик на пустой гексагон, пытаемся обработать ход
+
         if (hexagon.contains(clickPosition) && hexagon.getOwner() == 0 && selectedHexagonPos !=
             std::make_pair(-1, -1)) {
             Hexagon &selectedHex = hexagons[selectedHexagonPos];
@@ -100,33 +92,44 @@ void HexagonBoard::processMove(sf::Vector2f clickPosition) {
 }
 
 
-// Метод для обработки перемещения на первый сосед
 void HexagonBoard::handleMoveFirstNeighbor(Hexagon &targetHex) {
     captureEnemyNeighbors(targetHex);
 
     targetHex.setOwner(currentPlayerPvP);
 
-    // Сбрасываем выбранную клетку и переключаем игрока
     selectedHexagonPos = {-1, -1};
     switchPlayerPvP();
     switchEnemyNumberPvP();
     resetColor();
+
+    if (checkGameOver()) {
+        sf::Texture screenshotTexture;
+        screenshotTexture.create(window.getSize().x, window.getSize().y);
+        window.display();
+        screenshotTexture.update(window);
+        endGame(window , screenshotTexture);
+    }
 }
 
 
-// Метод для обработки перемещения на второй сосед
 void HexagonBoard::handleMoveSecondNeighbor(Hexagon &targetHex) {
     captureEnemyNeighbors(targetHex);
 
     targetHex.setOwner(currentPlayerPvP);
-    // Освобождаем предыдущую клетку
     hexagons[selectedHexagonPos].setOwner(0);
 
-    // Сбрасываем выбранную клетку и переключаем игрока
     selectedHexagonPos = {-1, -1};
     switchPlayerPvP();
     switchEnemyNumberPvP();
     resetColor();
+
+    if (checkGameOver()) {
+        sf::Texture screenshotTexture;
+        screenshotTexture.create(window.getSize().x, window.getSize().y);
+        window.display();
+        screenshotTexture.update(window);
+        endGame(window , screenshotTexture);
+    }
 }
 
 
@@ -177,8 +180,6 @@ void HexagonBoard::resetColor() {
 }
 
 
-
-
 void HexagonBoard::switchPlayerPvP() {
     currentPlayerPvP = (currentPlayerPvP == 1) ? 2 : 1;
 }
@@ -216,35 +217,133 @@ void HexagonBoard::initPvpStartPosition(int player1, int player2) {
 }
 
 void HexagonBoard::initScoreButtonPvP(sf::RenderWindow &window) {
-    scoreButtonPvP.setTextPos(window , 0,0);
+    scoreButtonPvP.setTextPos(window, 0, 0);
     scoreButtonPvP.setTextColor(sf::Color::White);
-    float byX = window.getSize().x  - scoreButtonPvP.getShape().getSize().x  - 50 ;
+    float byX = window.getSize().x - scoreButtonPvP.getShape().getSize().x - 50;
     auto player1Score = player1ScoreCount();
     auto player2Score = player2ScoreCount();
-    std::string scoreText = "First player:  " + std::to_string(player1Score) + "\nSecond player: " + std::to_string(player2Score);
+    std::string scoreText = "First player:  " + std::to_string(player1Score) + "\nSecond player: " +
+                            std::to_string(player2Score);
     scoreButtonPvP.setText(scoreText);
-    scoreButtonPvP.setPosition(window, byX, 20, scoreText);
-
+    scoreButtonPvP.setPosition(window, byX, 20);
 }
 
 int HexagonBoard::player1ScoreCount() {
-    auto count = 0 ;
+    auto count = 0;
     for (auto &hexagon: hexagons) {
         if (hexagon.second.getOwner() == 1) {
-            count+=1;
+            count += 1;
         }
     }
     return count;
 }
 
 int HexagonBoard::player2ScoreCount() {
-    auto count = 0 ;
+    auto count = 0;
     for (auto &hexagon: hexagons) {
         if (hexagon.second.getOwner() == 2) {
-            count+=1;
+            count += 1;
         }
     }
     return count;
 }
 
 
+bool HexagonBoard::checkGameOver() {
+    if (player1ScoreCount() == 0 || player2ScoreCount() == 0) {
+        return true;
+    }
+    if (!canPlayerMakeMove(currentPlayerPvP)) {
+        return true;
+    }
+    if (!canPlayerMakeMove(enemyNumberPvP)) {
+        return true;
+    }
+    return false;
+}
+
+bool HexagonBoard::canPlayerMakeMove(int player) {
+    for (auto &[position, hexagon]: hexagons) {
+        if (hexagon.getOwner() == player) {
+            auto firstNeighbors = hexagon.getFirstNeighborsPos();
+            auto secondNeighbors = hexagon.getSecondNeighborsPos();
+
+            for (auto &neighbor: firstNeighbors) {
+                if (hexagons[neighbor].getOwner() == 0) {
+                    return true;
+                }
+            }
+            for (auto &neighbor: secondNeighbors) {
+                if (hexagons[neighbor].getOwner() == 0) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+void HexagonBoard::endGame(sf::RenderWindow &window , sf::Texture screenshotTexture) {
+    sf::Sprite screenshotSprite(screenshotTexture);
+
+    std::string winner = (player1ScoreCount() > player2ScoreCount()) ? "Player 1" : "Player 2";
+
+    sf::Font font;
+    font.loadFromFile("C:\\Users\\Maks\\CLionProjects\\Hexxagon\\resources\\fonts\\Jersey15-Regular.ttf");
+
+    Button gameOverButton(1000 , 200 , "Game Over " + winner + " wins!",font , sf::Color(0,0,0,90) , sf::Color::Black , 0 );
+    gameOverButton.setPosition(window ,
+        (window.getSize().x - gameOverButton.getShape().getSize().x)/2 ,
+        (window.getSize().y - gameOverButton.getShape().getSize().y)/2 - 300) ;
+    gameOverButton.setTextColor(sf::Color::White);
+    gameOverButton.setTextSize(150);
+    gameOverButton.setTextPos(window , gameOverButton.getGlobalBounds().getPosition().x , gameOverButton.getGlobalBounds().getPosition().y);
+
+    Button exitButton(450, 100, "Exit Game", font, sf::Color(0,0,0,255), sf::Color::Red, 3);
+    exitButton.setPosition(window,
+        (window.getSize().x - exitButton.getShape().getSize().x) / 2 ,
+        window.getSize().y / 2 + 320 ) ;
+    exitButton.setTextColor(sf::Color::White);
+    exitButton.setTextSize(75);
+    exitButton.setTextPos(window , exitButton.getGlobalBounds().getPosition().x , exitButton.getGlobalBounds().getPosition().y);
+
+    Button menuButton(450, 100, "Back to Menu", font, sf::Color(0,0,0,255), sf::Color::Red, 3);
+    menuButton.setPosition(window,
+        (window.getSize().x - menuButton.getShape().getSize().x) / 2 ,
+        window.getSize().y / 2 + 200);
+    menuButton.setTextColor(sf::Color::White);
+    menuButton.setTextSize(75);
+    menuButton.setTextPos(window , menuButton.getGlobalBounds().getPosition().x , menuButton.getGlobalBounds().getPosition().y);
+
+    bool exitGame = false;
+    bool goToMenu = false;
+
+    while (!exitGame && !goToMenu) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (exitButton.isClicked(window, sf::Mouse::Left)) {
+                    exitGame = true;
+                }
+                if (menuButton.isClicked(window, sf::Mouse::Left)) {
+                    goToMenu = true;
+                }
+            }
+        }
+        window.clear();
+        window.draw(screenshotSprite);
+        gameOverButton.draw(window);
+        exitButton.draw(window);
+        menuButton.draw(window);
+        window.display();
+    }
+
+    if (exitGame) {
+        window.close();
+    } else if (goToMenu) {
+        Game::state = Game::GameState::Menu; // Переход в меню
+    }
+}
