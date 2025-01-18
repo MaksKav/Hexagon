@@ -208,6 +208,3 @@ bool Hexagon::getIsOccupied() const {
 std::pair<int, int> Hexagon::getPosition() {
     return position;
 }
-
-
-

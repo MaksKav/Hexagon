@@ -40,7 +40,7 @@ void Game::run() {
                 event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2f clickPosition(event.mouseButton.x, event.mouseButton.y);
                 boardPvP.handleClick(clickPosition); // Передаем позицию клика в HexagonBoard
-            }
+                }
             boardPvP.draw(window);
         }
         window.display();

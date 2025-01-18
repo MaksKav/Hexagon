@@ -362,7 +362,8 @@ void HexagonBoard::endGame(sf::RenderWindow &window, sf::Texture screenshotTextu
         window.close();
     } else if (goToMenu) {
         resetBoard();
-        Game::state = Game::GameState::Menu; // Переход в меню
+        Game::state = Game::GameState::Menu;
+        Game::mode = Game::GameMode::None;
     }
 }
 

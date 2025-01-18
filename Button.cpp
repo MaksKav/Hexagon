@@ -81,7 +81,3 @@ bool Button::getClickedFlag() const {
 void Button::setClickedFlag(bool flag) {
     clickedFlag = flag;
 };
-
-
-
-
