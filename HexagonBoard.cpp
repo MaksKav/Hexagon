@@ -106,7 +106,7 @@ void HexagonBoard::handleMoveFirstNeighbor(Hexagon &targetHex) {
         screenshotTexture.create(window.getSize().x, window.getSize().y);
         window.display();
         screenshotTexture.update(window);
-        endGame(window , screenshotTexture);
+        endGame(window, screenshotTexture);
     }
 }
 
@@ -127,7 +127,7 @@ void HexagonBoard::handleMoveSecondNeighbor(Hexagon &targetHex) {
         screenshotTexture.create(window.getSize().x, window.getSize().y);
         window.display();
         screenshotTexture.update(window);
-        endGame(window , screenshotTexture);
+        endGame(window, screenshotTexture);
     }
 }
 
@@ -252,16 +252,27 @@ bool HexagonBoard::checkGameOver() {
     if (player1ScoreCount() == 0 || player2ScoreCount() == 0) {
         return true;
     }
-    if (!canPlayerMakeMove(currentPlayerPvP)) {
+
+    if (player1ScoreCount() + player2ScoreCount() >= 58) {
         return true;
     }
-    if (!canPlayerMakeMove(enemyNumberPvP)) {
+
+    if (!canPlayerMakeMove(currentPlayerPvP) || !canPlayerMakeMove(enemyNumberPvP)) {
         return true;
     }
-    return false;
+
+    bool allHexagonsOccupied = true;
+    for (const auto &[position, hexagon]: hexagons) {
+        if (hexagon.getOwner() == 0) {
+            allHexagonsOccupied = false;
+            break;
+        }
+    }
+    return allHexagonsOccupied;
 }
 
 bool HexagonBoard::canPlayerMakeMove(int player) {
+    bool canMove = false;
     for (auto &[position, hexagon]: hexagons) {
         if (hexagon.getOwner() == player) {
             auto firstNeighbors = hexagon.getFirstNeighborsPos();
@@ -269,20 +280,22 @@ bool HexagonBoard::canPlayerMakeMove(int player) {
 
             for (auto &neighbor: firstNeighbors) {
                 if (hexagons[neighbor].getOwner() == 0) {
-                    return true;
+                    canMove = true;
+                    return canMove;
                 }
             }
             for (auto &neighbor: secondNeighbors) {
                 if (hexagons[neighbor].getOwner() == 0) {
-                    return true;
+                    canMove = true;
+                    return canMove;
                 }
             }
         }
     }
-    return false;
+    return canMove;
 }
 
-void HexagonBoard::endGame(sf::RenderWindow &window , sf::Texture screenshotTexture) {
+void HexagonBoard::endGame(sf::RenderWindow &window, sf::Texture screenshotTexture) {
     sf::Sprite screenshotSprite(screenshotTexture);
 
     std::string winner = (player1ScoreCount() > player2ScoreCount()) ? "Player 1" : "Player 2";
@@ -290,29 +303,33 @@ void HexagonBoard::endGame(sf::RenderWindow &window , sf::Texture screenshotText
     sf::Font font;
     font.loadFromFile("C:\\Users\\Maks\\CLionProjects\\Hexxagon\\resources\\fonts\\Jersey15-Regular.ttf");
 
-    Button gameOverButton(1000 , 200 , "Game Over " + winner + " wins!",font , sf::Color(0,0,0,90) , sf::Color::Black , 0 );
-    gameOverButton.setPosition(window ,
-        (window.getSize().x - gameOverButton.getShape().getSize().x)/2 ,
-        (window.getSize().y - gameOverButton.getShape().getSize().y)/2 - 300) ;
+    Button gameOverButton(1000, 200, "Game Over " + winner + " wins!", font, sf::Color(0, 0, 0, 90), sf::Color::Black,
+                          0);
+    gameOverButton.setPosition(window,
+                               (window.getSize().x - gameOverButton.getShape().getSize().x) / 2,
+                               (window.getSize().y - gameOverButton.getShape().getSize().y) / 2 - 300);
     gameOverButton.setTextColor(sf::Color::White);
     gameOverButton.setTextSize(150);
-    gameOverButton.setTextPos(window , gameOverButton.getGlobalBounds().getPosition().x , gameOverButton.getGlobalBounds().getPosition().y);
+    gameOverButton.setTextPos(window, gameOverButton.getGlobalBounds().getPosition().x,
+                              gameOverButton.getGlobalBounds().getPosition().y);
 
-    Button exitButton(450, 100, "Exit Game", font, sf::Color(0,0,0,255), sf::Color::Red, 3);
+    Button exitButton(450, 100, "Exit Game", font, sf::Color(0, 0, 0, 255), sf::Color::Red, 3);
     exitButton.setPosition(window,
-        (window.getSize().x - exitButton.getShape().getSize().x) / 2 ,
-        window.getSize().y / 2 + 320 ) ;
+                           (window.getSize().x - exitButton.getShape().getSize().x) / 2,
+                           window.getSize().y / 2 + 320);
     exitButton.setTextColor(sf::Color::White);
     exitButton.setTextSize(75);
-    exitButton.setTextPos(window , exitButton.getGlobalBounds().getPosition().x , exitButton.getGlobalBounds().getPosition().y);
+    exitButton.setTextPos(window, exitButton.getGlobalBounds().getPosition().x,
+                          exitButton.getGlobalBounds().getPosition().y + 10);
 
-    Button menuButton(450, 100, "Back to Menu", font, sf::Color(0,0,0,255), sf::Color::Red, 3);
+    Button menuButton(450, 100, "Back to Menu", font, sf::Color(0, 0, 0, 255), sf::Color::Red, 3);
     menuButton.setPosition(window,
-        (window.getSize().x - menuButton.getShape().getSize().x) / 2 ,
-        window.getSize().y / 2 + 200);
+                           (window.getSize().x - menuButton.getShape().getSize().x) / 2,
+                           window.getSize().y / 2 + 200);
     menuButton.setTextColor(sf::Color::White);
     menuButton.setTextSize(75);
-    menuButton.setTextPos(window , menuButton.getGlobalBounds().getPosition().x , menuButton.getGlobalBounds().getPosition().y);
+    menuButton.setTextPos(window, menuButton.getGlobalBounds().getPosition().x,
+                          menuButton.getGlobalBounds().getPosition().y + 10);
 
     bool exitGame = false;
     bool goToMenu = false;
@@ -350,7 +367,7 @@ void HexagonBoard::endGame(sf::RenderWindow &window , sf::Texture screenshotText
 
 
 void HexagonBoard::resetBoard() {
-    for (auto &[position, hexagon] : hexagons) {
+    for (auto &[position, hexagon]: hexagons) {
         hexagon.setOwner(0);
     }
 

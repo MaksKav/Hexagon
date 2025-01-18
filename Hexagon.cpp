@@ -174,6 +174,7 @@ void Hexagon::getNeighbors(int row, int col) {
 
 void Hexagon::installUnavailableHexagon(sf::RenderWindow &window) {
     isAvailable = false;
+    owner = -100500;
     outerHexxagon.setOutlineColor(sf::Color::Transparent);
     outerHexxagon.setFillColor(sf::Color::Transparent);
     innerHexxagon.setOutlineColor(sf::Color::Transparent);
