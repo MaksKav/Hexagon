@@ -1,5 +1,4 @@
 #include "Button.hpp"
-
 Button::Button(float width, float height, const std::string &label, const sf::Font &font,
                sf::Color fillColor, sf::Color outlineColor, float outlineThickness )
     : defaultColor(fillColor), defaultOutlineColor(outlineColor), outlineThickness(outlineThickness) {
@@ -18,19 +17,6 @@ Button::Button(float width, float height, const std::string &label, const sf::Fo
     text.setString(label);
     text.setCharacterSize(60);
     text.setFillColor(sf::Color::Black);
-}
-
-void Button::setPosition(sf::RenderWindow &window, float x, float y, const std::string &label) {
-    shape.setPosition(x, y);
-    setText(window, x, y, label);
-}
-
-void Button::setText(sf::RenderWindow &window, float shapeX, float shapeY, const std::string &label) {
-    sf::FloatRect shapeRect = shape.getGlobalBounds();
-    sf::FloatRect textRect = text.getLocalBounds();
-
-    text.setPosition(shapeX + (shapeRect.width - textRect.width) / 2,
-                     shapeY - (shapeRect.height - textRect.height) / 5);
 }
 
 
@@ -58,6 +44,27 @@ sf::RectangleShape &Button::getShape() {
     return shape;
 }
 
+void Button::setPosition(sf::RenderWindow &window, float x, float y, const std::string &label) {
+    shape.setPosition(x, y);
+    setTextPos(window, x, y);
+}
+
+void Button::setTextPos(sf::RenderWindow &window, float shapeX, float shapeY) {
+    sf::FloatRect shapeRect = shape.getGlobalBounds();
+    sf::FloatRect textRect = text.getLocalBounds();
+
+    text.setPosition(shapeX + (shapeRect.width - textRect.width) / 2,
+                     shapeY - (shapeRect.height - textRect.height) / 5);
+}
+
+void Button::setText(const std::string &t) {
+    text.setString(t);
+}
+
+void Button::setTextColor(sf::Color color) {
+    text.setFillColor(color);
+}
+
 sf::Vector2f Button::getGlobalPosition() const {
     return shape.getPosition();
 }
@@ -69,5 +76,7 @@ bool Button::getClickedFlag() const {
 void Button::setClickedFlag(bool flag) {
     clickedFlag = flag;
 };
+
+
 
 

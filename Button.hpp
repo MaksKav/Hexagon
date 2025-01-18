@@ -19,22 +19,19 @@ public:
     Button(float width, float height, const std::string &label, const sf::Font &font,
            sf::Color fillColor, sf::Color outlineColor, float outlineThickness);
 
-    void setPosition(sf::RenderWindow &window, float x, float y, const std::string &label); // Установка позиции кнопки
-    void setText(sf::RenderWindow &window, float x, float y, const std::string &label); // Изменение текста кнопки
-    virtual void draw(sf::RenderWindow &window); // Рисование кнопки
-  //  bool isMouseOver(const sf::RenderWindow &window) const; // Проверка наведения мыши на кнопку
-    std::string getText() const;
+    void setPosition(sf::RenderWindow &window, float x, float y, const std::string &label);
+    virtual void draw(sf::RenderWindow &window);
 
-    // Метод для получения границ кнопки
     sf::FloatRect getGlobalBounds() const {
         return shape.getGlobalBounds();
+
     }
 
     // Проверка, находится ли курсор мыши внутри кнопки
     bool isMouseOver(sf::RenderWindow& window) const {
         // Получаем позицию мыши в мировых координатах
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-        return getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)); // Проверяем, попадает ли позиция мыши в границы кнопки
+        return getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos));
     }
 
     // Проверка клика по кнопке
@@ -50,6 +47,11 @@ public:
 
     bool getClickedFlag() const;
     void setClickedFlag(bool clickedFlag);
+
+    void setTextPos(sf::RenderWindow &window, float x, float y);
+    std::string getText() const;
+    void setTextColor(sf::Color color);
+    void setText(const std::string &t);
 
 };
 

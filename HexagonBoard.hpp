@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include "Hexagon.hpp"
+#include "Button.hpp"
 
 
 class HexagonBoard {
@@ -13,6 +14,7 @@ private:
     sf::Color activeOutlineColorSecondCircle = sf::Color(255, 225, 0);
 
     std::map<std::pair<int, int>, Hexagon> hexagons;
+    Button scoreButtonPvP;
 
     void initHexxagonMap(sf::RenderWindow &window);
     void markHexagonsUnavailable(sf::RenderWindow &window, const std::vector<std::pair<int, int> > &positions);
@@ -30,6 +32,14 @@ private:
     int currentPlayerPvP = 1;
     int enemyNumberPvP = 2;
 
+    sf::Font font;
+    void initScoreButtonPvP(sf::RenderWindow &window);
+    int player1ScoreCount();
+    int player2ScoreCount();
+
+    bool checkGameOver();
+    bool canPlayerMakeMove(int player);
+    void endGame(sf::RenderWindow &window);
 public:
     HexagonBoard(sf::RenderWindow &window);
 

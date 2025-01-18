@@ -1,11 +1,13 @@
 #include "HexagonBoard.hpp"
 
 #include <iostream>
-
 #include "Hexagon.hpp"
 #include <valarray>
 
-HexagonBoard::HexagonBoard(sf::RenderWindow &window) {
+
+HexagonBoard::HexagonBoard(sf::RenderWindow &window):
+    scoreButtonPvP(500, 150, "First player: \nSecond player:", font, sf::Color(0,0,0,60), sf::Color::Black, 0) {
+    font.loadFromFile("C:\\Users\\Maks\\CLionProjects\\Hexxagon\\resources\\fonts\\Jersey15-Regular.ttf");
     initHexxagonMap(window);
 }
 
@@ -26,6 +28,15 @@ void HexagonBoard::initHexxagonMap(sf::RenderWindow &window) {
     }
 };
 
+
+void HexagonBoard::draw(sf::RenderWindow &window) {
+    initScoreButtonPvP(window);
+    scoreButtonPvP.draw(window);
+    markHexagonsUnavailable(window, {{3, 4}, {4, 3}, {5, 4}});
+    for (auto &hexagonPair: hexagons) {
+        hexagonPair.second.draw(window);
+    }
+};
 
 void HexagonBoard::handleClick(sf::Vector2f clickPosition) {
     // Если еще не выбран гексагон, выбираем его
@@ -61,24 +72,27 @@ void HexagonBoard::processMove(sf::Vector2f clickPosition) {
     for (auto &[position, hexagon]: hexagons) {
         // Если клик на гексагон текущего игрока, переизбираем его
         if (hexagon.contains(clickPosition) && hexagon.getOwner() == currentPlayerPvP) {
-            resetPreviousSelection();  // Сброс выделения
-            selectedHexagonPos = position;  // Новый выбор
-            hexagon.setOutlineColor(activeOutlineColorSecondCircle);  // Выделяем новый
-            highlightAvailableMoves();  // Подсвечиваем доступные ходы
-            return;  // Завершаем обработку
+            resetPreviousSelection(); // Сброс выделения
+            selectedHexagonPos = position; // Новый выбор
+            hexagon.setOutlineColor(activeOutlineColorSecondCircle); // Выделяем новый
+            highlightAvailableMoves(); // Подсвечиваем доступные ходы
+            return; // Завершаем обработку
         }
 
         // Если клик на пустой гексагон, пытаемся обработать ход
-        if (hexagon.contains(clickPosition) && hexagon.getOwner() == 0 && selectedHexagonPos != std::make_pair(-1, -1)) {
+        if (hexagon.contains(clickPosition) && hexagon.getOwner() == 0 && selectedHexagonPos !=
+            std::make_pair(-1, -1)) {
             Hexagon &selectedHex = hexagons[selectedHexagonPos];
             Hexagon &targetHex = hexagons[position];
 
             auto currentHexNeighborsFirst = selectedHex.getFirstNeighborsPos();
             auto currentHexNeighborsSecond = selectedHex.getSecondNeighborsPos();
 
-            if (std::find(currentHexNeighborsFirst.begin(), currentHexNeighborsFirst.end(), targetHex.getPosition()) != currentHexNeighborsFirst.end()) {
+            if (std::find(currentHexNeighborsFirst.begin(), currentHexNeighborsFirst.end(), targetHex.getPosition()) !=
+                currentHexNeighborsFirst.end()) {
                 handleMoveFirstNeighbor(targetHex);
-            } else if (std::find(currentHexNeighborsSecond.begin(), currentHexNeighborsSecond.end(), targetHex.getPosition()) != currentHexNeighborsSecond.end()) {
+            } else if (std::find(currentHexNeighborsSecond.begin(), currentHexNeighborsSecond.end(),
+                                 targetHex.getPosition()) != currentHexNeighborsSecond.end()) {
                 handleMoveSecondNeighbor(targetHex);
             }
         }
@@ -87,7 +101,7 @@ void HexagonBoard::processMove(sf::Vector2f clickPosition) {
 
 
 // Метод для обработки перемещения на первый сосед
-void HexagonBoard::handleMoveFirstNeighbor(Hexagon& targetHex) {
+void HexagonBoard::handleMoveFirstNeighbor(Hexagon &targetHex) {
     captureEnemyNeighbors(targetHex);
 
     targetHex.setOwner(currentPlayerPvP);
@@ -101,7 +115,7 @@ void HexagonBoard::handleMoveFirstNeighbor(Hexagon& targetHex) {
 
 
 // Метод для обработки перемещения на второй сосед
-void HexagonBoard::handleMoveSecondNeighbor(Hexagon& targetHex) {
+void HexagonBoard::handleMoveSecondNeighbor(Hexagon &targetHex) {
     captureEnemyNeighbors(targetHex);
 
     targetHex.setOwner(currentPlayerPvP);
@@ -147,9 +161,9 @@ void HexagonBoard::highlightAvailableMoves() {
     }
 }
 
-void HexagonBoard::captureEnemyNeighbors(Hexagon& targetHex) {
-    std::vector<std::pair<int, int>> targetHexFirstNeighbors = targetHex.getFirstNeighborsPos();
-    for (const auto& pos : targetHexFirstNeighbors) {
+void HexagonBoard::captureEnemyNeighbors(Hexagon &targetHex) {
+    std::vector<std::pair<int, int> > targetHexFirstNeighbors = targetHex.getFirstNeighborsPos();
+    for (const auto &pos: targetHexFirstNeighbors) {
         if (hexagons[pos].getOwner() == enemyNumberPvP) {
             hexagons[pos].setOwner(currentPlayerPvP);
         }
@@ -160,7 +174,9 @@ void HexagonBoard::resetColor() {
     for (auto &[position, hexagon]: hexagons) {
         hexagon.setOutlineColor(unactiveOutlineColor);
     }
-};
+}
+
+
 
 
 void HexagonBoard::switchPlayerPvP() {
@@ -171,13 +187,6 @@ void HexagonBoard::switchEnemyNumberPvP() {
     enemyNumberPvP = (enemyNumberPvP == 2) ? 1 : 2;
 }
 
-
-void HexagonBoard::draw(sf::RenderWindow &window) {
-    markHexagonsUnavailable(window, {{3, 4}, {4, 3}, {5, 4}});
-    for (auto &hexagonPair: hexagons) {
-        hexagonPair.second.draw(window);
-    }
-}
 
 void HexagonBoard::markHexagonsUnavailable(sf::RenderWindow &window,
                                            const std::vector<std::pair<int, int> > &positions) {
@@ -205,3 +214,37 @@ void HexagonBoard::initPvpStartPosition(int player1, int player2) {
         }
     }
 }
+
+void HexagonBoard::initScoreButtonPvP(sf::RenderWindow &window) {
+    scoreButtonPvP.setTextPos(window , 0,0);
+    scoreButtonPvP.setTextColor(sf::Color::White);
+    float byX = window.getSize().x  - scoreButtonPvP.getShape().getSize().x  - 50 ;
+    auto player1Score = player1ScoreCount();
+    auto player2Score = player2ScoreCount();
+    std::string scoreText = "First player:  " + std::to_string(player1Score) + "\nSecond player: " + std::to_string(player2Score);
+    scoreButtonPvP.setText(scoreText);
+    scoreButtonPvP.setPosition(window, byX, 20, scoreText);
+
+}
+
+int HexagonBoard::player1ScoreCount() {
+    auto count = 0 ;
+    for (auto &hexagon: hexagons) {
+        if (hexagon.second.getOwner() == 1) {
+            count+=1;
+        }
+    }
+    return count;
+}
+
+int HexagonBoard::player2ScoreCount() {
+    auto count = 0 ;
+    for (auto &hexagon: hexagons) {
+        if (hexagon.second.getOwner() == 2) {
+            count+=1;
+        }
+    }
+    return count;
+}
+
+
