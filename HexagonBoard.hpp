@@ -41,6 +41,8 @@ private:
     bool checkGameOver();
     bool canPlayerMakeMove(int player);
     void endGame(sf::RenderWindow &window ,  sf::Texture screenshotTexture);
+
+    void resetBoard();
 public:
     HexagonBoard(sf::RenderWindow &window);
 
@@ -53,5 +55,7 @@ public:
     void switchPlayerPvP();
 
     void switchEnemyNumberPvP();
+
+
 };
 #endif // HEXAGONBOARD_HPP

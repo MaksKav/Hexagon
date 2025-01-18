@@ -71,7 +71,6 @@ void HexagonBoard::processMove(sf::Vector2f clickPosition) {
             return;
         }
 
-
         if (hexagon.contains(clickPosition) && hexagon.getOwner() == 0 && selectedHexagonPos !=
             std::make_pair(-1, -1)) {
             Hexagon &selectedHex = hexagons[selectedHexagonPos];
@@ -344,6 +343,21 @@ void HexagonBoard::endGame(sf::RenderWindow &window , sf::Texture screenshotText
     if (exitGame) {
         window.close();
     } else if (goToMenu) {
+        resetBoard();
         Game::state = Game::GameState::Menu; // Переход в меню
     }
+}
+
+
+void HexagonBoard::resetBoard() {
+    for (auto &[position, hexagon] : hexagons) {
+        hexagon.setOwner(0);
+    }
+
+    initPvpStartPosition(1, 2);
+
+    resetColor();
+    selectedHexagonPos = {-1, -1};
+    currentPlayerPvP = 1; // Сбрасываем текущего игрока
+    enemyNumberPvP = 2;
 }
